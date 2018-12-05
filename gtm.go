@@ -2,16 +2,17 @@ package gtm
 
 import (
 	"fmt"
-	"github.com/globalsign/mgo"
-	"github.com/globalsign/mgo/bson"
-	"github.com/pkg/errors"
-	"github.com/serialx/hashring"
 	"log"
 	"os"
 	"strconv"
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/globalsign/mgo"
+	"github.com/globalsign/mgo/bson"
+	"github.com/pkg/errors"
+	"github.com/serialx/hashring"
 )
 
 type OrderingGuarantee int
@@ -53,6 +54,8 @@ type Options struct {
 	PipeAllowDisk       bool
 	SplitVector         bool
 	Log                 *log.Logger
+	NS                  string
+	OPs                 []string
 }
 
 type Op struct {
@@ -809,6 +812,12 @@ func LastOpTimestamp(session *mgo.Session, options *Options) bson.MongoTimestamp
 func GetOpLogQuery(session *mgo.Session, after bson.MongoTimestamp, options *Options) *mgo.Query {
 	query := bson.M{"ts": bson.M{"$gt": after}, "fromMigrate": bson.M{"$exists": false}}
 	collection := OpLogCollection(session, options)
+	if options.NS != "" {
+		query["ns"] = options.NS
+	}
+	if len(options.OPs) > 0 {
+		query["op"] = bson.M{"$in": options.OPs}
+	}
 	return collection.Find(query).LogReplay().Sort("$natural")
 }
 
