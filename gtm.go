@@ -54,7 +54,7 @@ type Options struct {
 	PipeAllowDisk       bool
 	SplitVector         bool
 	Log                 *log.Logger
-	NS                  string
+	NS                  []string
 	OPs                 []string
 }
 
@@ -812,8 +812,8 @@ func LastOpTimestamp(session *mgo.Session, options *Options) bson.MongoTimestamp
 func GetOpLogQuery(session *mgo.Session, after bson.MongoTimestamp, options *Options) *mgo.Query {
 	query := bson.M{"ts": bson.M{"$gt": after}, "fromMigrate": bson.M{"$exists": false}}
 	collection := OpLogCollection(session, options)
-	if options.NS != "" {
-		query["ns"] = options.NS
+	if len(options.NS) > 0 {
+		query["ns"] = bson.M{"$in": options.NS}
 	}
 	if len(options.OPs) > 0 {
 		query["op"] = bson.M{"$in": options.OPs}
