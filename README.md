@@ -15,7 +15,7 @@ The original gtm uses the community mgo driver. To use the community mgo driver 
 
 ### Installation ###
 
-	go get github.com/rwynn/gtm@master
+	go get github.com/teambition/gtm@master
 
 ### Setup ###
 
@@ -40,7 +40,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/bsontype"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"github.com/rwynn/gtm"
+	"github.com/teambition/gtm"
 	"reflect"
 	"time"
 )
@@ -232,7 +232,7 @@ for {
 ### Workers ###
 
 You may want to distribute event handling between a set of worker processes on different machines.
-To do this you can leverage the **github.com/rwynn/gtm/consistent** package.  
+To do this you can leverage the **github.com/teambition/gtm/consistent** package.  
 
 Create a TOML document containing a list of all the event handlers.
 

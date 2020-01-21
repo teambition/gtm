@@ -1,4 +1,4 @@
-module github.com/rwynn/gtm
+module github.com/teambition/gtm
 
 go 1.12
 
