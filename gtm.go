@@ -101,6 +101,8 @@ type Options struct {
 	Pipe                PipelineBuilder
 	PipeAllowDisk       bool
 	Log                 *log.Logger
+	NS                  []string
+	OPs                 []string
 }
 
 type OpResumeToken struct {
@@ -984,6 +986,12 @@ func GetOpLogCursor(client *mongo.Client, after primitive.Timestamp, o *Options)
 		"ts":          bson.M{"$gt": after},
 		"op":          bson.M{"$in": opCodes},
 		"fromMigrate": bson.M{"$exists": false},
+	}
+	if len(o.NS) > 0 {
+		query["ns"] = bson.M{"$in": o.NS}
+	}
+	if len(o.OPs) > 0 {
+		query["op"] = bson.M{"$in": o.OPs}
 	}
 	opts := &options.FindOptions{}
 	opts.SetSort(bson.M{"$natural": 1})
